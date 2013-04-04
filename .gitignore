@@ -1,0 +1,6 @@
+config/*.pl
+*.sw[a-z]
+.carton/
+local/
+logs/
+var/

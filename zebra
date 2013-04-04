@@ -1,0 +1,104 @@
+#!/bin/bash
+# ----------------------------
+NAME="Zebra"
+APP_ROOT=$(cd $(dirname $0); pwd)
+WORKAREA="${APP_ROOT}/var"
+PID_PATH="${WORKAREA}/pid/starman.pid"
+LOG_PATH="${WORKAREA}/log/starman.log"
+SOCKET_PATH="${WORKAREA}/run/starman.sock"
+OPTS="--daemonize --pid ${PID_PATH} --listen ${SOCKET_PATH} --error-log ${LOG_PATH}"
+
+check_pid () {
+    if [ -f $PID_PATH ]; then
+        PID=`cat $PID_PATH 2> /dev/null`
+        STATUS=`ps aux | grep $PID | grep -v grep | wc -l`
+    else
+        STATUS=0
+        PID=0
+    fi
+}
+
+start () {
+    check_pid
+
+    if [ ! -f ${WORKAREA} ]; then
+        mkdir -p $WORKAREA       > /dev/null 2>&1
+        mkdir -p "$WORKAREA/pid" > /dev/null 2>&1
+        mkdir -p "$WORKAREA/log" > /dev/null 2>&1
+        mkdir -p "$WORKAREA/run" > /dev/null 2>&1
+    fi
+
+    if [ $PID != 0 -a $STATUS != 0 ]; then
+        echo "$NAME (pid: $PID) is currently running!"
+        exit 1
+    else
+        nohup carton exec -I lib -- starman $OPTS > /dev/null 2>&1 &
+        echo "Started $NAME."
+    fi
+}
+
+stop () {
+    check_pid
+
+    if [ $PID != 0 -a $STATUS != 0 ]; then
+        kill -TERM $PID
+        rm -f $PID_PATH
+        echo "Stopped $NAME."
+    else
+        echo "Error! $NAME not started!"
+        exit 1
+    fi
+}
+
+reload () {
+    check_pid
+
+    echo "Reloading configuration files for $NAME"
+
+    if [ $PID != 0 -a $STATUS != 0 ]; then
+        kill -HUP $PID
+    else
+        echo "Error! $NAME not started!"
+        exit 1
+    fi
+
+    echo "done."
+}
+
+status () {
+    check_pid
+
+    if [ $PID != 0 -a $STATUS != 0 ]; then
+        echo "$NAME with PID $PID is running."
+    else
+        echo "$NAME not running."
+        exit 1
+    fi
+}
+
+
+cd $APP_ROOT
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    restart)
+        stop
+        start
+        ;;
+    reload)
+        reload
+        ;;
+    status)
+        status
+        ;;
+    *)
+        echo "Usage: ./sagano {start|stop|restart|reload|status}" >&2
+        exit 1
+        ;;
+esac
+
+exit 0

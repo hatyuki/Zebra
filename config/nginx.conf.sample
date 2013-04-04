@@ -1,0 +1,33 @@
+upstream zebra {
+  server unix:/home/www/zebra/var/run/starman.sock;
+}
+
+server {
+  listen SERVER_IP:80 default_server;
+  server_name FQDN;
+  root /home/www/zebra;
+
+  # individual nginx logs for this zebra vhost
+  access_log  /var/log/nginx/zebra_access.log;
+  error_log   /var/log/nginx/zebra_error.log;
+
+  location / {
+    # serve static files from defined root folder;.
+    # @zebra is a named location for the upstream fallback, see below
+    try_files $uri @zebra;
+  }
+
+  # if a file, which is not found in the root folder is requested,
+  # then the proxy pass the request to the upsteam (zebra starman)
+  location @zebra {
+    proxy_read_timeout    300;
+    proxy_connect_timeout 300;
+    proxy_redirect        off;
+
+    proxy_set_header   X-Forwarded-Proto $scheme;
+    proxy_set_header   Host              $http_host;
+    proxy_set_header   X-Real-IP         $remote_addr;
+
+    proxy_pass http://zebra;
+  }
+}

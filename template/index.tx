@@ -1,0 +1,37 @@
+: cascade include::layout
+
+: after javascript -> {
+    <script src="<: static_file('/assets/js/qr.js') :>"></script>
+    <script type="text/javascript">new QRCode( )</script>
+: }
+
+: after content -> {
+    <section class="page-header">
+        <h1>QR コード生成</h1>
+    </section>
+
+    <div class="row">
+        <div class="span4">
+            <section class="well">
+                <p class="label label-important">Chrome での閲覧を推奨します</p>
+                <p>Text 欄にお好みの文章を入力してください。自動で QR Code を生成します。</p>
+                <p>保存した画像ファイルのフォーマットは <span class="label label-info">PNG</span> です。</p>
+            </section>
+        </div><!-- div.span4 -->
+
+        <div class="span8">
+            <section class="input">
+                <h2>Text</h2>
+                <textarea id="text" class="input-block-level" rows="5" style="resize: vertical;" data-generator="<: uri_for('/generate') :>"></textarea>
+            </section>
+            <section class="result">
+                <h2>QR Code</h2>
+                <canvas id="qrcode" width="4" height="4"></canvas>
+                <div class="form-actions">
+                    <a id="download" class="btn disabled" href="download" download="qr.png">QR Code を保存</a>
+                </div>
+
+            </section>
+        </div><!-- div.span8 -->
+    </div><!-- div.row -->
+: }
