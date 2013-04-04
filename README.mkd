@@ -1,0 +1,65 @@
+Zebra Installation Guide
+==================================================
+## 0. Motivation
+なんとなく HTML5 の Canvas を使ってみたかった。
+ので、QR コードの生成自体は Text::QRCode に頼っています。
+
+## 1. Install Packages
+
+### Install the required packages.
+
+    # Install qrencode
+    aptitude install libqrencode-dev
+
+## 2. Setup Zebra
+
+    # We'll install Zebra into your home directory
+    cd ${HOME}
+
+### Clone the Source
+
+    # Clone Zebra repository
+    git clone https://github.com/hatyuki/zebra.git
+
+### Configure it
+
+    # Go to Zebra dir
+    cd ${HOME}/zebra
+    
+    # Copy the example config
+    cp config/deployment.pl.sample config/deployment.pl
+
+### Install Modules
+
+    cd ${HOME}/zebra
+    carton install --deployment
+
+### Start Your Zebra Instance
+
+    ${HOME}/zebra/zebra start
+
+
+## 3. nginx
+
+### Installation
+
+    sudo aptitude install nginx
+
+### Site Configuration
+
+    sudo cp config/nginx.conf.sample /etc/nginx/site-available/zebra
+    sudo ln -s /etc/nginx/sites-available/zebra /etc/nginx/sites-enabled/zebra
+
+Make sure to edit the config file to match your setup:
+
+    # Change **SERVER_IP** and **FQDN**
+    # to the IP address and fully-qualified domain name of your host serving Zebra
+    sudo vim /etc/nginx/sites-available/zebra
+
+### Restart
+
+    sudo service nginx restart
+
+
+## 4. Done!
+**Enjoy!**

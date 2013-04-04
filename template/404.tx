@@ -1,0 +1,8 @@
+: cascade include::layout
+
+: after content -> {
+    <div class="hero-unit" style="margin-top: 20px;">
+        <h1>404 Not Found</h1>
+        <p>The Requested URL was not found on this server.</p>
+    </div>
+: }
