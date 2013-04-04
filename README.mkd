@@ -4,9 +4,11 @@ Zebra Installation Guide
 なんとなく HTML5 の Canvas を使ってみたかった。
 ので、QR コードの生成自体は Text::QRCode に頼っています。
 
-## 1. Install Packages
+Demo: http://qr.magicalhat.jp
 
-### Install the required packages.
+
+## 1. Install Packages
+### Install the required packages
 
     # Install qrencode
     aptitude install libqrencode-dev
