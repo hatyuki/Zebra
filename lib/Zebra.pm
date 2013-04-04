@@ -5,7 +5,7 @@ use parent qw/ Amon2 /;
 use Text::QRCode;
 use Zebra::Config;
 
-our $VERSION = '0.00';
+our $VERSION = '0.01';
 
 sub load_config
 {
