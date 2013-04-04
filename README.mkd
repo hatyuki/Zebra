@@ -47,8 +47,8 @@ Zebra Installation Guide
 
 ### Site Configuration
 
-    sudo cp config/nginx.conf.sample /etc/nginx/site-available/zebra
-    sudo ln -s /etc/nginx/sites-available/zebra /etc/nginx/sites-enabled/zebra
+    sudo cp config/nginx.conf.sample /etc/nginx/sites-available/zebra.conf
+    sudo ln -s /etc/nginx/sites-available/zebra.conf /etc/nginx/sites-enabled/zebra.conf
 
 Make sure to edit the config file to match your setup:
 
